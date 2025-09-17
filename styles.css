@@ -19,12 +19,14 @@ body {
     line-height: 1.6;
     color: var(--text-dark);
     overflow-x: hidden;
+    width: 100%;
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 20px;
+    width: 100%;
 }
 
 /* Navigation */
@@ -48,6 +50,8 @@ nav.scrolled {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .logo {
@@ -81,6 +85,7 @@ nav.scrolled {
     align-items: center;
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .hero::before {
@@ -154,13 +159,14 @@ nav.scrolled {
 
 /* Section Styles */
 section {
-    padding: 80px 0;
+    padding: 60px 0;
     position: relative;
+    width: 100%;
 }
 
 .section-title {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 40px;
     position: relative;
 }
 
@@ -200,7 +206,7 @@ section {
 }
 
 .timeline-item {
-    padding: 20px 40px;
+    padding: 15px 30px;
     position: relative;
     background: inherit;
     width: 50%;
@@ -217,7 +223,7 @@ section {
 }
 
 .timeline-content {
-    padding: 20px 30px;
+    padding: 20px 25px;
     background: white;
     position: relative;
     border-radius: 15px;
@@ -227,6 +233,24 @@ section {
 
 .timeline-content:hover {
     transform: translateY(-5px);
+}
+
+.timeline-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.timeline-content p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.timeline-content small {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
 }
 
 .timeline-item::before {
@@ -310,13 +334,13 @@ section {
 .info-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+    gap: 25px;
     margin-top: 40px;
 }
 
 .info-card {
     background: white;
-    padding: 30px;
+    padding: 25px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
@@ -329,12 +353,17 @@ section {
 
 .info-card h3 {
     color: var(--primary-color);
-    margin-bottom: 15px;
-    font-size: 1.3rem;
+    margin-bottom: 12px;
+    font-size: 1.2rem;
+}
+
+.info-card p {
+    font-size: 0.9rem;
+    line-height: 1.5;
 }
 
 .info-card .icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--accent-color);
     margin-bottom: 15px;
 }
@@ -422,7 +451,7 @@ footer {
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 20px;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     text-align: left;
 }
@@ -460,53 +489,156 @@ footer {
     }
 }
 
-/* Responsive Design */
+/* Mobile Responsive Design */
 @media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .nav-container {
+        padding: 1rem 15px;
+    }
+
     .nav-links {
         display: none;
     }
 
     .hero h1 {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
     }
 
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+    }
+
+    /* Mobile Timeline */
     .timeline::before {
-        left: 31px;
+        left: 20px;
     }
 
     .timeline-item {
         width: 100%;
-        padding-left: 70px;
-        padding-right: 25px;
+        left: 0 !important;
+        padding-left: 50px;
+        padding-right: 15px;
+        padding-top: 10px;
+        padding-bottom: 10px;
     }
 
     .timeline-item::before {
-        left: 21px;
+        left: 10px;
+        top: 25px;
     }
 
-    .timeline-item:nth-child(even) {
-        left: 0%;
+    .timeline-content {
+        padding: 15px 20px;
+    }
+
+    .timeline-content h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .timeline-content p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+        margin-bottom: 6px;
+    }
+
+    .timeline-content small {
+        font-size: 0.8rem;
     }
 
     .family-intro {
         flex-direction: column;
         align-items: center;
+        gap: 0.5rem;
     }
 
     .gallery {
         grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Mobile Info Cards */
+    .info-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .info-card {
+        padding: 20px 15px;
+    }
+
+    .info-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+    }
+
+    .info-card p {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    .info-card .icon {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
     }
 
     .footer-content {
         text-align: center;
         flex-direction: column;
+        gap: 15px;
+    }
+
+    .footer-section p {
+        font-size: 0.85rem;
     }
 
     .map-container {
-        padding: 20px;
+        padding: 20px 15px;
     }
 
     #map {
         height: 300px;
+    }
+
+    section {
+        padding: 40px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .section-title h2 {
+        font-size: 1.7rem;
+    }
+
+    .timeline-content {
+        padding: 12px 15px;
+    }
+
+    .timeline-content h3 {
+        font-size: 1rem;
+    }
+
+    .timeline-content p {
+        font-size: 0.85rem;
+    }
+
+    .filter-buttons {
+        gap: 5px;
+    }
+
+    .filter-btn {
+        padding: 8px 15px;
+        font-size: 0.9rem;
     }
 }
