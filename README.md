@@ -27,13 +27,19 @@
 
 ```
 yugov-kaliningrad/
-├── index.html          # Главная страница
-├── styles.css          # Стили
-├── script.js           # JavaScript функционал
-├── README.md           # Документация
-└── images/            # Папка для изображений (опционально)
-```
+├── index.html (главный файл)
+├── journey-section.html
+├── gallery-photos.html  
+├── history-section.html
+├── modules-loader.js
+├── script.js (ваш основной JS)
+├── styles.css (ваши стили)
+└── images/
+    ├── IMG6202509081112405.jpg
+    ├── IMG6202509081112458.jpg
+    └── ... (все остальные фотографии)
 
+```
 ## Локации путешествия
 
 - Балтийское побережье
