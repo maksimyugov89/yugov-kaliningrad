@@ -15,9 +15,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // Navbar scroll effect
 window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
-    if (window.scrollY > 50) {
+    if (navbar && window.scrollY > 50) {
         navbar.classList.add('scrolled');
-    } else {
+    } else if (navbar) {
         navbar.classList.remove('scrolled');
     }
 });
@@ -40,6 +40,9 @@ const observer = new IntersectionObserver((entries) => {
 
 // Initialize map
 function initMap() {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+    
     const map = L.map('map').setView([54.7065, 20.511], 10);
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -134,31 +137,37 @@ filterButtons.forEach(button => {
 });
 
 // Gallery modal
-const modal = document.getElementById('gallery-modal');
-const modalImg = document.getElementById('modal-img');
-const closeBtn = document.querySelector('.close');
+function initGalleryModal() {
+    const modal = document.getElementById('gallery-modal');
+    const modalImg = document.getElementById('modal-img');
+    const closeBtn = document.querySelector('.close');
+    const galleryItems = document.querySelectorAll('.gallery-item');
 
-galleryItems.forEach(item => {
-    item.addEventListener('click', () => {
-        modal.style.display = 'block';
-        modalImg.src = item.querySelector('img').src;
-        modalImg.alt = item.querySelector('img').alt;
+    if (!modal || !modalImg || !closeBtn) return;
+
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            modal.style.display = 'block';
+            modalImg.src = item.querySelector('img').src;
+            modalImg.alt = item.querySelector('img').alt;
+        });
     });
-});
 
-closeBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-});
-
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
+    closeBtn.addEventListener('click', () => {
         modal.style.display = 'none';
-    }
-});
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
 
 // Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
+    initGalleryModal();
     
     // Animate timeline items on scroll
     const timelineItems = document.querySelectorAll('.timeline-item');
@@ -166,9 +175,13 @@ document.addEventListener('DOMContentLoaded', () => {
         item.dataset.delay = `${index * 0.2}s`;
     });
     
-    // Observe elements for animation
-    observer.observe(document.querySelectorAll('.timeline-item'));
-    observer.observe(document.querySelectorAll('.info-card'));
+    // Observe elements for animation - ИСПРАВЛЕНО
+    document.querySelectorAll('.timeline-item').forEach(item => {
+        observer.observe(item);
+    });
+    document.querySelectorAll('.info-card').forEach(item => {
+        observer.observe(item);
+    });
 });
 
 // Parallax effect for hero section
