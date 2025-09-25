@@ -658,3 +658,15 @@ footer {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Убираем старую привязку к анимации */
+.timeline-item {
+    animation: none; /* Отменяем старую анимацию */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Добавляем плавный переход */
+}
+
+/* Новый класс, который будет делать элементы видимыми */
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
