@@ -1,121 +1,113 @@
-// Функция для загрузки HTML-модулей
 async function loadModule(elementId, filePath) {
     try {
         const response = await fetch(filePath);
-        if (!response.ok) {
-            throw new Error(`Failed to load ${filePath}: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Failed to load ${filePath}`);
         const html = await response.text();
         document.getElementById(elementId).innerHTML = html;
     } catch (error) {
         console.error('Error loading module:', error);
-        document.getElementById(elementId).innerHTML = '<p>Ошибка загрузки контента</p>';
     }
 }
 
-// Загрузка всех модулей при загрузке страницы
-document.addEventListener('DOMContentLoaded', async function() {
-    // Загружаем модули параллельно
+document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([
         loadModule('journey-section', 'journey-section.html'),
         loadModule('gallery-section', 'gallery-photos.html'),
+        loadModule('map-section', 'map-section.html'),
         loadModule('history-section', 'history-section.html')
     ]);
-    
-    // После загрузки модулей инициализируем функциональность
+
+    // Once all modules are loaded, initialize functionalities
     initializeGallery();
-    initializeFilterButtons();
+    initializeMap();
 });
 
-// Инициализация галереи (модальные окна и т.д.)
 function initializeGallery() {
-    const galleryItems = document.querySelectorAll('.gallery-item img');
+    const photoGallery = document.getElementById('photo-gallery');
+    if (!photoGallery) return;
+
+    const photos = [
+        { src: "images/img_1.jpg", title: "Курортный проспект", cat: "sights family" },
+        { src: "images/img_2.jpg", title: "Прогулка по Зеленоградску", cat: "family" },
+        { src: "images/img_3.jpg", title: "Тевтонский рыцарь", cat: "culture museums" },
+        { src: "images/img_8.jpg", title: "На Куршской косе", cat: "nature family" },
+        { src: "images/img_12.jpg", title: "Папа у Балтики", cat: "beach family" },
+        { src: "images/img_15.jpg", title: "Фридландские ворота", cat: "sights" },
+        { src: "images/img_20.jpg", title: "Селфи у ворот", cat: "family" },
+        { src: "images/img_30.jpg", title: "Семейный портрет", cat: "family beach" },
+        { src: "images/img_32.jpg", title: "Мама с дочками", cat: "family beach" },
+    ];
+
+    photos.forEach(photo => {
+        const item = document.createElement('div');
+        item.className = 'gallery-item';
+        item.dataset.category = photo.cat;
+        item.innerHTML = `
+            <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+            <div class="gallery-overlay">
+                <div>
+                    <h4>${photo.title}</h4>
+                    <p>${photo.cat.replace(/\b\w/g, l => l.toUpperCase())}</p>
+                </div>
+            </div>
+        `;
+        photoGallery.appendChild(item);
+    });
+
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
     const modal = document.getElementById('gallery-modal');
     const modalImg = document.getElementById('modal-img');
     const closeBtn = document.querySelector('.close');
 
-    // Добавляем обработчики для изображений
-    galleryItems.forEach(img => {
-        img.addEventListener('click', function() {
-            modal.style.display = 'block';
-            modalImg.src = this.src;
-            modalImg.alt = this.alt;
-        });
-    });
-
-    // Закрытие модального окна
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-    }
-
-    // Закрытие по клику вне изображения
-    window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-}
-
-// Инициализация кнопок фильтрации
-function initializeFilterButtons() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-
     filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Убираем active класс со всех кнопок
+        button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
-            // Добавляем active класс к текущей кнопке
-            this.classList.add('active');
-
-            const filter = this.getAttribute('data-filter');
+            button.classList.add('active');
+            const filter = button.dataset.filter;
 
             galleryItems.forEach(item => {
-                if (filter === 'all') {
-                    item.style.display = 'block';
-                } else {
-                    const categories = item.getAttribute('data-category');
-                    if (categories && categories.includes(filter)) {
-                        item.style.display = 'block';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                }
+                item.style.display = (filter === 'all' || item.dataset.category.includes(filter)) ? 'block' : 'none';
             });
         });
     });
+
+    galleryItems.forEach(item => {
+        item.addEventListener('click', () => {
+            modal.style.display = 'block';
+            modalImg.src = item.querySelector('img').src;
+        });
+    });
+
+    closeBtn.onclick = () => modal.style.display = 'none';
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
 }
 
-// Функция для добавления новых фотографий (для будущего использования)
-function addNewPhoto(imagePath, alt, title, description, categories) {
-    const gallery = document.getElementById('photo-gallery');
-    
-    const galleryItem = document.createElement('div');
-    galleryItem.className = 'gallery-item';
-    galleryItem.setAttribute('data-category', categories);
-    
-    galleryItem.innerHTML = `
-        <img src="${imagePath}" alt="${alt}">
-        <div class="gallery-overlay">
-            <div>
-                <h4>${title}</h4>
-                <p>${description}</p>
-            </div>
-        </div>
-    `;
-    
-    gallery.appendChild(galleryItem);
-    
-    // Переинициализируем обработчики для новой фотографии
-    const newImg = galleryItem.querySelector('img');
-    const modal = document.getElementById('gallery-modal');
-    const modalImg = document.getElementById('modal-img');
-    
-    newImg.addEventListener('click', function() {
-        modal.style.display = 'block';
-        modalImg.src = this.src;
-        modalImg.alt = this.alt;
+function initializeMap() {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+
+    const map = L.map('map').setView([54.85, 20.4], 9);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+
+    const locations = [
+        { coords: [54.95, 20.15], title: 'Зеленоградск' },
+        { coords: [55.08, 20.62], title: 'Куршская коса' },
+        { coords: [54.71, 20.51], title: 'Центр Калининграда' },
+        { coords: [54.94, 20.15], title: 'Светлогорск' }
+    ];
+
+    locations.forEach(loc => {
+        L.marker(loc.coords).addTo(map)
+            .bindPopup(`<b>${loc.title}</b>`);
     });
 }
