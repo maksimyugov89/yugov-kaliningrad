@@ -1,15 +1,21 @@
 async function loadModule(elementId, filePath) {
     try {
         const response = await fetch(filePath);
-        if (!response.ok) throw new Error(`Failed to load ${filePath}`);
+        if (!response.ok) throw new Error(`Не удалось загрузить ${filePath}: ${response.statusText}`);
         const html = await response.text();
-        document.getElementById(elementId).innerHTML = html;
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.innerHTML = html;
+        } else {
+            console.error(`Элемент с id "${elementId}" не найден.`);
+        }
     } catch (error) {
-        console.error('Error loading module:', error);
+        console.error('Ошибка загрузки модуля:', error);
     }
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Параллельно загружаем все секции
     await Promise.all([
         loadModule('journey-section', 'journey-section.html'),
         loadModule('gallery-section', 'gallery-photos.html'),
@@ -17,15 +23,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadModule('history-section', 'history-section.html')
     ]);
 
-    // Once all modules are loaded, initialize functionalities
+    // После загрузки контента, инициализируем всю интерактивность
     initializeGallery();
     initializeMap();
+    initializeTimelineObserver(); // <--- Вызываем анимацию путешествия здесь
 });
 
 function initializeGallery() {
     const photoGallery = document.getElementById('photo-gallery');
     if (!photoGallery) return;
 
+    // Убедитесь, что пути к изображениям правильные
     const photos = [
         { src: "images/img_1.jpg", title: "Курортный проспект", cat: "sights family" },
         { src: "images/img_2.jpg", title: "Прогулка по Зеленоградску", cat: "family" },
@@ -47,7 +55,6 @@ function initializeGallery() {
             <div class="gallery-overlay">
                 <div>
                     <h4>${photo.title}</h4>
-                    <p>${photo.cat.replace(/\b\w/g, l => l.toUpperCase())}</p>
                 </div>
             </div>
         `;
@@ -94,16 +101,17 @@ function initializeMap() {
     const map = L.map('map').setView([54.85, 20.4], 9);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
         subdomains: 'abcd',
         maxZoom: 19
     }).addTo(map);
 
     const locations = [
-        { coords: [54.95, 20.15], title: 'Зеленоградск' },
-        { coords: [55.08, 20.62], title: 'Куршская коса' },
-        { coords: [54.71, 20.51], title: 'Центр Калининграда' },
-        { coords: [54.94, 20.15], title: 'Светлогорск' }
+        { coords: [54.953, 20.153], title: 'Зеленоградск' },
+        { coords: [55.096, 20.846], title: 'Куршская коса' },
+        { coords: [54.708, 20.512], title: 'Исторический центр Калининграда' },
+        { coords: [54.945, 20.153], title: 'Светлогорск' },
+        { coords: [54.644, 19.891], title: 'Балтийск' }
     ];
 
     locations.forEach(loc => {
