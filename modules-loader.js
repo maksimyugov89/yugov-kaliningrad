@@ -15,7 +15,6 @@ async function loadModule(elementId, filePath) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Параллельно загружаем все секции
     await Promise.all([
         loadModule('journey-section', 'journey-section.html'),
         loadModule('gallery-section', 'gallery-photos.html'),
@@ -23,78 +22,86 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadModule('history-section', 'history-section.html')
     ]);
 
-    // После загрузки контента, инициализируем всю интерактивность
     initializeGallery();
     initializeMap();
-    initializeTimelineObserver(); 
+    initializeTimelineObserver();
 });
 
 function initializeGallery() {
-    const photoGallery = document.getElementById('photo-gallery');
-    if (!photoGallery) return;
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    if (galleryItems.length === 0) return;
 
-    // Убедитесь, что пути к изображениям правильные
-    const photos = [
-        { src: "images/img_1.jpg", title: "Курортный проспект", cat: "sights family" },
-        { src: "images/img_2.jpg", title: "Прогулка по Зеленоградску", cat: "family" },
-        { src: "images/img_3.jpg", title: "Тевтонский рыцарь", cat: "culture museums" },
-        { src: "images/img_8.jpg", title: "На Куршской косе", cat: "nature family" },
-        { src: "images/img_12.jpg", title: "Папа у Балтики", cat: "beach family" },
-        { src: "images/img_15.jpg", title: "Фридландские ворота", cat: "sights" },
-        { src: "images/img_20.jpg", title: "Селфи у ворот", cat: "family" },
-        { src: "images/img_30.jpg", title: "Семейный портрет", cat: "family beach" },
-        { src: "images/img_32.jpg", title: "Мама с дочками", cat: "family beach" },
-        // Добавьте сюда больше фотографий при необходимости
-    ];
+    // Шаг 1: Превращаем каждый статичный div в рабочую ссылку для GLightbox
+    galleryItems.forEach(item => {
+        const img = item.querySelector('img');
+        const titleElement = item.querySelector('h4');
+        const descriptionElement = item.querySelector('p');
 
-    photos.forEach(photo => {
-        // Оборачиваем каждую картинку в ссылку <a> для GLightbox
+        if (!img) return;
+
+        // Извлекаем данные
+        const imgSrc = img.getAttribute('src');
+        const title = titleElement ? titleElement.textContent : '';
+        const description = descriptionElement ? descriptionElement.textContent : '';
+
+        // Создаем новый элемент <a>, который будет оберткой
         const link = document.createElement('a');
-        link.href = photo.src; 
-        link.className = 'gallery-item glightbox'; 
-        link.dataset.category = photo.cat;
-        link.dataset.gallery = 'family-trip'; 
-        link.dataset.title = photo.title; 
+        link.href = imgSrc;
+        link.className = 'gallery-item glightbox'; // Важные классы
+        
+        // Переносим data-атрибуты со старого div на новую ссылку
+        if (item.dataset.category) {
+            link.dataset.category = item.dataset.category;
+        }
+        
+        // Устанавливаем атрибуты для GLightbox
+        link.dataset.gallery = 'family-trip';
+        link.dataset.title = title;
+        link.dataset.description = description;
 
-        link.innerHTML = `
-            <img src="${photo.src}" alt="${photo.title}" loading="lazy">
-            <div class="gallery-overlay">
-                <div>
-                    <h4>${photo.title}</h4>
-                </div>
-            </div>
-        `;
-        photoGallery.appendChild(link);
+        // Копируем внутреннее содержимое (img и overlay) в новую ссылку
+        link.innerHTML = item.innerHTML;
+
+        // Заменяем старый div на новую ссылку в DOM
+        item.parentNode.replaceChild(link, item);
     });
-    
-    // Инициализация GLightbox
+
+    // Шаг 2: Инициализируем GLightbox
     const lightbox = GLightbox({
-        selector: '.glightbox', 
-        touchNavigation: true, 
-        loop: true, 
-        zoomable: true, 
-        openEffect: 'zoom', 
+        selector: '.glightbox',
+        touchNavigation: true,
+        loop: true,
+        zoomable: true,
+        openEffect: 'zoom',
         closeEffect: 'fade',
         slideEffect: 'slide',
+        // Включаем отображение описаний
+        description: {
+            position: 'bottom', // или 'left', 'right'
+            mobilePosition: 'bottom'
+        }
     });
 
+    // Шаг 3: Настраиваем фильтрацию
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('a.gallery-item');
-    
+    const newGalleryItems = document.querySelectorAll('a.gallery-item'); // Теперь ищем ссылки
+
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             const filter = button.dataset.filter;
 
-            galleryItems.forEach(item => {
-                const isVisible = filter === 'all' || item.dataset.category.includes(filter);
+            newGalleryItems.forEach(item => {
+                const isVisible = filter === 'all' || (item.dataset.category && item.dataset.category.includes(filter));
                 item.style.display = isVisible ? 'block' : 'none';
             });
+            // Перезагружаем GLightbox, чтобы он учитывал отфильтрованные элементы
             lightbox.reload();
         });
     });
 }
+
 
 function initializeMap() {
     const mapElement = document.getElementById('map');
