@@ -3,106 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Семья Юговых в Калининграде | Семейное путешествие</title>
+    <title>Семья Юговых в Калининграде | Интерактивное путешествие</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800;900&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
+    <div class="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo">Семья Юговых</div>
             <ul class="nav-links">
                 <li><a href="#home">Главная</a></li>
                 <li><a href="#journey">Путешествие</a></li>
-                <li><a href="#gallery">Фотогалерея</a></li>
-                <li><a href="#map">Карта маршрута</a></li>
+                <li><a href="#gallery">Галерея</a></li>
+                <li><a href="#map">Карта</a></li>
                 <li><a href="#history">История</a></li>
             </ul>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Калининградское приключение</h1>
-                <p>Семейное путешествие по самому западному региону России</p>
-                
-                <div class="family-intro">
-                    <div class="family-member">👨 Максим</div>
-                    <div class="family-member">👩 Марина</div>
-                    <div class="family-member">👧 Алёна</div>
-                    <div class="family-member">👧 Мирослава</div>
-                    <div class="family-member">👧 Софья</div>
-                </div>
-                
-                <a href="#journey" class="cta-button">Начать путешествие</a>
+        <div class="particles">
             </div>
+        <div class="hero-content">
+            <h1>Калининградское приключение</h1>
+            <p>Семейное путешествие по самому западному региону России</p>
+            
+            <div class="family-intro">
+                <div class="family-member">👨 Максим</div>
+                <div class="family-member">👩 Марина</div>
+                <div class="family-member">👧 Алёна</div>
+                <div class="family-member">👧 Мирослава</div>
+                <div class="family-member">👧 Софья</div>
+            </div>
+            
+            <a href="#journey" class="cta-button">Начать путешествие</a>
         </div>
     </section>
 
-    <!-- Journey Timeline - подключается из отдельного файла -->
     <div id="journey-section"></div>
-
-    <!-- Gallery - подключается из отдельного файла -->
     <div id="gallery-section"></div>
-
-    <!-- Interactive Map -->
-    <section id="map" class="section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Интерактивная карта маршрута</h2>
-            </div>
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Historical Information - подключается из отдельного файла -->
+    <div id="map-section"></div>
     <div id="history-section"></div>
 
-    <!-- Modal for Gallery -->
     <div id="gallery-modal" class="modal">
         <span class="close">&times;</span>
         <div class="modal-content">
-            <img id="modal-img" src="" alt="">
+            <img id="modal-img" src="" alt="Фото из путешествия">
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Семья Юговых</h4>
-                    <p>Максим, Марина, Алёна, Мирослава и Софья</p>
-                    <p>Незабываемое путешествие по самому западному региону России</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Маршрут путешествия</h4>
-                    <p>🐱 Зеленоградск - город кошек</p>
-                    <p>🏖️ Светлогорск с водонапорной башней Раушен</p>
-                    <p>🌲 Куршская коса - национальный парк ЮНЕСКО</p>
-                    <p>🏰 Средневековые ворота Калининграда</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Яркие воспоминания</h4>
-                    <p>📸 15+ уникальных локаций</p>
-                    <p>🎨 Музеи марципана, кошек и изобразительных искусств</p>
-                    <p>⚓ Балтийский флот и морские традиции</p>
-                    <p>🌊 Балтийское море и курортные променады</p>
-                </div>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Семья Юговых</h4>
+                <p>Максим, Марина, Алёна, Мирослава и Софья</p>
+                <p>Незабываемое путешествие 2024</p>
             </div>
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
-                <p>&copy; 2024 Семья Юговых. Создано с ❤️ для сохранения семейных воспоминаний.</p>
+            <div class="footer-section">
+                <h4>Маршрут</h4>
+                <p>🐱 Зеленоградск</p>
+                <p>🏖️ Светлогорск</p>
+                <p>🌲 Куршская коса</p>
+                <p>🏰 Калининград</p>
+            </div>
+            <div class="footer-section">
+                <h4>Воспоминания</h4>
+                <p>📸 Сотни ярких фотографий</p>
+                <p>🌊 Шум Балтийского моря</p>
+                <p>🦀 Вкуснейшие угощения</p>
+                <p>❤️ Бесценное время вместе</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="script.js"></script>
     <script src="modules-loader.js"></script>
