@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // После загрузки контента, инициализируем всю интерактивность
     initializeGallery();
     initializeMap();
-    initializeTimelineObserver(); // <--- Вызываем анимацию путешествия здесь
+    initializeTimelineObserver(); 
 });
 
 function initializeGallery() {
@@ -44,13 +44,19 @@ function initializeGallery() {
         { src: "images/img_20.jpg", title: "Селфи у ворот", cat: "family" },
         { src: "images/img_30.jpg", title: "Семейный портрет", cat: "family beach" },
         { src: "images/img_32.jpg", title: "Мама с дочками", cat: "family beach" },
+        // Добавьте сюда больше фотографий при необходимости
     ];
 
     photos.forEach(photo => {
-        const item = document.createElement('div');
-        item.className = 'gallery-item';
-        item.dataset.category = photo.cat;
-        item.innerHTML = `
+        // Оборачиваем каждую картинку в ссылку <a> для GLightbox
+        const link = document.createElement('a');
+        link.href = photo.src; 
+        link.className = 'gallery-item glightbox'; 
+        link.dataset.category = photo.cat;
+        link.dataset.gallery = 'family-trip'; 
+        link.dataset.title = photo.title; 
+
+        link.innerHTML = `
             <img src="${photo.src}" alt="${photo.title}" loading="lazy">
             <div class="gallery-overlay">
                 <div>
@@ -58,15 +64,23 @@ function initializeGallery() {
                 </div>
             </div>
         `;
-        photoGallery.appendChild(item);
+        photoGallery.appendChild(link);
+    });
+    
+    // Инициализация GLightbox
+    const lightbox = GLightbox({
+        selector: '.glightbox', 
+        touchNavigation: true, 
+        loop: true, 
+        zoomable: true, 
+        openEffect: 'zoom', 
+        closeEffect: 'fade',
+        slideEffect: 'slide',
     });
 
     const filterButtons = document.querySelectorAll('.filter-btn');
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    const modal = document.getElementById('gallery-modal');
-    const modalImg = document.getElementById('modal-img');
-    const closeBtn = document.querySelector('.close');
-
+    const galleryItems = document.querySelectorAll('a.gallery-item');
+    
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
@@ -74,29 +88,17 @@ function initializeGallery() {
             const filter = button.dataset.filter;
 
             galleryItems.forEach(item => {
-                item.style.display = (filter === 'all' || item.dataset.category.includes(filter)) ? 'block' : 'none';
+                const isVisible = filter === 'all' || item.dataset.category.includes(filter);
+                item.style.display = isVisible ? 'block' : 'none';
             });
+            lightbox.reload();
         });
     });
-
-    galleryItems.forEach(item => {
-        item.addEventListener('click', () => {
-            modal.style.display = 'block';
-            modalImg.src = item.querySelector('img').src;
-        });
-    });
-
-    closeBtn.onclick = () => modal.style.display = 'none';
-    modal.onclick = (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
 }
 
 function initializeMap() {
     const mapElement = document.getElementById('map');
-    if (!mapElement) return;
+    if (!mapElement || mapElement.classList.contains('leaflet-container')) return;
 
     const map = L.map('map').setView([54.85, 20.4], 9);
 
