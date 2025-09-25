@@ -312,8 +312,14 @@ nav.scrolled {
     width: 50%;
     opacity: 0;
     transform: translateY(50px);
-    /* Animation will be triggered by JS */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 .timeline-item:nth-child(even) { left: 50%; }
 .timeline-item:nth-child(odd) { left: 0; text-align: right; }
@@ -371,7 +377,8 @@ nav.scrolled {
     margin-top: 3rem;
 }
 
-.gallery-item {
+/* We style the <a> tag now */
+a.gallery-item {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
@@ -379,6 +386,8 @@ nav.scrolled {
     background: var(--glass);
     transition: all 0.3s;
     aspect-ratio: 4/3;
+    display: block;
+    text-decoration: none;
 }
 
 .gallery-item img {
@@ -402,6 +411,7 @@ nav.scrolled {
     padding: 25px;
     opacity: 0;
     transition: opacity 0.3s;
+    color: var(--text);
 }
 
 .gallery-item:hover .gallery-overlay {
@@ -512,62 +522,6 @@ nav.scrolled {
     overflow: hidden;
 }
 
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 2000;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
-    animation: modalFadeIn 0.3s;
-}
-
-@keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    max-width: 90vw;
-    max-height: 90vh;
-    animation: modalSlideIn 0.3s;
-}
-
-@keyframes modalSlideIn {
-    from { transform: translate(-50%, -50%) scale(0.8); }
-    to { transform: translate(-50%, -50%) scale(1); }
-}
-
-.modal-content img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 15px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-}
-
-.close {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    color: white;
-    font-size: 40px;
-    font-weight: 300;
-    cursor: pointer;
-    transition: all 0.3s;
-    z-index: 10;
-}
-
-.close:hover {
-    transform: rotate(90deg);
-    color: var(--accent);
-}
-
 /* Footer */
 footer {
     background: linear-gradient(to bottom, transparent, rgba(15, 15, 35, 0.8));
@@ -657,16 +611,4 @@ footer {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
-}
-
-/* Убираем старую привязку к анимации */
-.timeline-item {
-    animation: none; /* Отменяем старую анимацию */
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Добавляем плавный переход */
-}
-
-/* Новый класс, который будет делать элементы видимыми */
-.timeline-item.visible {
-    opacity: 1;
-    transform: translateY(0);
 }
