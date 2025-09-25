@@ -423,15 +423,22 @@ a.gallery-item {
     margin-bottom: 5px;
 }
 
+
+/* Контейнер с описанием фото, чтобы фон был всегда белым */
+.gslide-description.gslide-image-description {
+    background-color: #ffffff !important;
+}
+
 /* Стиль для заголовка (название фото) */
 .gslide-title {
-    color: #1a1a1a !important; /* Насыщенный, почти чёрный цвет для лучшей читаемости */
-    font-weight: bold !important; /* Делаем шрифт жирнее */
+    color: #1a1a1a !important; /* Насыщенный, почти чёрный цвет */
+    font-weight: bold !important;
 }
 
 /* Стиль для описания (дополнительный текст под названием) */
-.gslide-description {
-    color: #555555 !important; /* Тёмно-серый цвет, хорошо читается, но не спорит с заголовком */
+.gslide-description p, .gslide-description {
+    color: #555555 !important; /* Уверенный тёмно-серый цвет */
+    opacity: 1 !important; /* Убираем возможную прозрачность */
 }
 
 /* Filter Buttons */
